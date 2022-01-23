@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Form } from "rsuite";
 import { useUser } from "../Context/DataContext";
 import Welcome from "./Welcome";
@@ -6,6 +6,44 @@ import Copy from "../components/Copy";
 
 const UserForm = () => {
   const { currentuser, copytext } = useUser();
+  const user = currentuser !== "" && currentuser;
+  console.log(user);
+
+  const [edit, setedit] = useState(true);
+  const [save, setsave] = useState(false);
+  const [value, setvalue] = useState({
+    email: "",
+    password: "",
+    userid: "",
+    username: "",
+  });
+  const handlechange = (values, event) => {
+    setvalue({ ...value, [event.target.id]: values });
+  };
+
+  useEffect(() => {
+    if (user) {
+      // settitle(user.name.title);
+      setvalue({
+        email: user.email,
+        password: user.login.password,
+        userid: user.login.uuid,
+        username: user.login.username,
+      });
+    }
+  }, [user]);
+  console.log(value);
+
+  const handleclick = (e) => {
+    e.preventDefault();
+    setedit(false);
+    setsave(true);
+  };
+  const handleclicksave = (e) => {
+    e.preventDefault();
+    setedit(true);
+    setsave(false);
+  };
 
   return (
     <>
@@ -16,15 +54,16 @@ const UserForm = () => {
             <Form.Group>
               <Form.ControlLabel>Email</Form.ControlLabel>
               <Form.Control
-                value={currentuser.email}
+                value={value.email}
                 name="email"
                 id="email"
                 type="email"
-                disabled
+                readOnly={edit}
+                onChange={handlechange}
                 style={{ color: "black", cursor: "text" }}
               />
               <button
-                className="pt-1"
+                className={`pt-1 ${save ? "d-none" : ""}`}
                 onClick={() => {
                   copytext("email");
                 }}
@@ -39,12 +78,13 @@ const UserForm = () => {
                 type="text"
                 name="password"
                 id="password"
-                disabled
-                value={currentuser.login.password}
+                readOnly={edit}
+                onChange={handlechange}
+                value={value.password}
                 style={{ color: "black", cursor: "text" }}
               />
               <button
-                className="pt-1"
+                className={`pt-1 ${save ? "d-none" : ""}`}
                 onClick={() => {
                   copytext("password");
                 }}
@@ -56,15 +96,16 @@ const UserForm = () => {
             <Form.Group>
               <Form.ControlLabel>UserId</Form.ControlLabel>
               <Form.Control
-                disabled
+                readOnly={edit}
+                onChange={handlechange}
                 type="text"
                 name="userid"
                 id="userid"
-                value={currentuser.login.uuid}
+                value={value.userid}
                 style={{ color: "black", cursor: "text" }}
               />
               <button
-                className="pt-1"
+                className={`pt-1 ${save ? "d-none" : ""}`}
                 onClick={() => {
                   copytext("userid");
                 }}
@@ -76,15 +117,16 @@ const UserForm = () => {
             <Form.Group>
               <Form.ControlLabel>Username</Form.ControlLabel>
               <Form.Control
-                disabled
+                readOnly={edit}
+                onChange={handlechange}
                 type="text"
                 name="username"
                 id="username"
-                value={currentuser.login.username}
+                value={value.username}
                 style={{ color: "black", cursor: "text" }}
               />
               <button
-                className="pt-1"
+                className={`pt-1 ${save ? "d-none" : ""}`}
                 onClick={() => {
                   copytext("username");
                 }}
@@ -97,8 +139,20 @@ const UserForm = () => {
                 appearance="primary"
                 style={{ width: "400px", marginTop: "15px" }}
                 color="red"
+                onClick={handleclick}
+                disabled={save}
               >
                 Edit
+              </Button>
+              <Button
+                appearance="primary"
+                color="green"
+                className="mx-3"
+                style={{ width: "400px", marginTop: "15px" }}
+                onClick={handleclicksave}
+                disabled={!save}
+              >
+                Save
               </Button>
             </div>
           </Form>

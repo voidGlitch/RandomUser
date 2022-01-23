@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Form } from "rsuite";
 
 import { useUser } from "../Context/DataContext";
@@ -7,6 +7,22 @@ import Copy from "../components/Copy";
 
 const Personal = () => {
   const { currentuser, copytext } = useUser();
+
+  const user = currentuser !== "" && currentuser;
+  console.log(user);
+
+  const [edit, setedit] = useState(true);
+  const [save, setsave] = useState(false);
+  const [value, setvalue] = useState({
+    title: "",
+    first: "",
+    last: "",
+    dob: "",
+    gender: "",
+    age: "",
+  });
+
+  // const [title, settitle] = useState("");
 
   const taskDate = (dateMilli) => {
     var d = (new Date(dateMilli) + "").split(" ");
@@ -20,6 +36,31 @@ const Personal = () => {
   );
   const date = taskDate(datemilli);
 
+  const handlechange = (values, event) => {
+    setvalue({ ...value, [event.target.id]: values });
+  };
+
+  useEffect(() => {
+    if (user) {
+      // settitle(user.name.title);
+      setvalue({
+        title: user.name.title,
+        first: user.name.first,
+        last: user.name.last,
+        dob: date,
+        gender: user.gender,
+        age: user.dob.age,
+      });
+    }
+  }, [user, date]);
+  console.log(value);
+
+  const handleclick = (e) => {
+    e.preventDefault();
+    setedit(false);
+    setsave(true);
+  };
+
   return (
     <div className="container">
       <Welcome />
@@ -29,15 +70,16 @@ const Personal = () => {
             <Form.Group>
               <Form.ControlLabel>Title</Form.ControlLabel>
               <Form.Control
-                value={currentuser.name.title}
+                value={value.title}
                 name="title"
                 id="title"
                 type="text"
-                disabled
-                style={{ color: "black", cursor: "text" }}
+                readOnly={edit}
+                // style={{ color: "black", cursor: "text" }}
+                onChange={handlechange}
               />
               <button
-                className="pt-1"
+                className={`pt-1 ${save ? "d-none" : ""}`}
                 onClick={() => {
                   copytext("title");
                 }}
@@ -45,37 +87,19 @@ const Personal = () => {
                 <Copy />
               </button>
             </Form.Group>
-            <Form.Group>
-              <Form.ControlLabel>Gender</Form.ControlLabel>
-              <Form.Control
-                value={currentuser.gender}
-                name="gender"
-                id="gender"
-                type="text"
-                disabled
-                style={{ color: "black", cursor: "text" }}
-              />
-              <button
-                className="pt-1"
-                onClick={() => {
-                  copytext("gender");
-                }}
-              >
-                <Copy />
-              </button>
-            </Form.Group>
+
             <Form.Group>
               <Form.ControlLabel>First Name</Form.ControlLabel>
               <Form.Control
-                value={currentuser.name.first}
+                value={value.first}
                 name="first"
                 id="first"
-                type="name"
-                disabled
-                style={{ color: "black", cursor: "text" }}
+                type="text"
+                readOnly={edit}
+                onChange={handlechange}
               />
               <button
-                className="pt-1"
+                className={`pt-1 ${save ? "d-none" : ""}`}
                 onClick={() => {
                   copytext("first");
                 }}
@@ -90,12 +114,12 @@ const Personal = () => {
                 type="text"
                 name="last"
                 id="last"
-                disabled
-                value={currentuser.name.last}
-                style={{ color: "black", cursor: "text" }}
+                value={value.last}
+                readOnly={edit}
+                onChange={handlechange}
               />
               <button
-                className="pt-1"
+                className={`pt-1 ${save ? "d-none" : ""}`}
                 onClick={() => {
                   copytext("last");
                 }}
@@ -109,14 +133,52 @@ const Personal = () => {
                 type="text"
                 name="dob"
                 id="dob"
-                disabled
-                value={date}
-                style={{ color: "black", cursor: "text" }}
+                value={value.dob}
+                readOnly={edit}
+                onChange={handlechange}
               />
               <button
-                className="pt-1"
+                className={`pt-1 ${save ? "d-none" : ""}`}
                 onClick={() => {
                   copytext("dob");
+                }}
+              >
+                <Copy />
+              </button>
+            </Form.Group>
+            <Form.Group>
+              <Form.ControlLabel>Gender</Form.ControlLabel>
+              <Form.Control
+                value={value.gender}
+                name="gender"
+                id="gender"
+                type="text"
+                readOnly={edit}
+                onChange={handlechange}
+              />
+              <button
+                className={`pt-1 ${save ? "d-none" : ""}`}
+                onClick={() => {
+                  copytext("gender");
+                }}
+              >
+                <Copy />
+              </button>
+            </Form.Group>
+            <Form.Group>
+              <Form.ControlLabel>AGE</Form.ControlLabel>
+              <Form.Control
+                value={value.age}
+                name="age"
+                id="age"
+                type="number"
+                readOnly={edit}
+                onChange={handlechange}
+              />
+              <button
+                className={`pt-1 ${save ? "d-none" : ""}`}
+                onClick={() => {
+                  copytext("age");
                 }}
               >
                 <Copy />
@@ -128,8 +190,20 @@ const Personal = () => {
                 appearance="primary"
                 color="red"
                 style={{ width: "400px", marginTop: "15px" }}
+                onClick={handleclick}
+                disabled={save}
               >
                 Edit
+              </Button>
+              <Button
+                appearance="primary"
+                color="green"
+                className="mx-3"
+                style={{ width: "400px", marginTop: "15px" }}
+                onClick={handleclick}
+                disabled={!save}
+              >
+                Save
               </Button>
             </div>
           </Form>
@@ -140,25 +214,3 @@ const Personal = () => {
 };
 
 export default Personal;
-// {/* <Form.Group>
-//               <Form.ControlLabel>Tel-number</Form.ControlLabel>
-//               <Form.Control
-//                 value={currentuser.login.uuid}
-//                 name="tel"
-//                 type="tel"
-//                 disabled
-//                 style={{ color: "black", cursor: "text" }}
-//               />
-//             </Form.Group>
-
-//             <Form.Group>
-//               <Form.ControlLabel>Address</Form.ControlLabel>
-//               <Form.Control
-//                 type="text"
-//                 value={currentuser.login.username}
-//                 name="address"
-//                 disabled
-//                 style={{ color: "black", cursor: "text" }}
-
-//             </Form.Group>
-//               /> */}

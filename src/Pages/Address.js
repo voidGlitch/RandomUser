@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Form } from "rsuite";
 import { useUser } from "../Context/DataContext";
 import Copy from "../components/Copy";
@@ -7,6 +7,45 @@ import Welcome from "./Welcome";
 
 const Address = () => {
   const { currentuser, copytext } = useUser();
+  const user = currentuser !== "" && currentuser;
+  console.log(user);
+
+  const [edit, setedit] = useState(true);
+  const [save, setsave] = useState(false);
+  const [value, setvalue] = useState({
+    streetname: "",
+    streetnum: "",
+    city: "",
+    state: "",
+    postcode: "",
+    timezone: "",
+    timezoneoff: "",
+  });
+  const handlechange = (values, event) => {
+    setvalue({ ...value, [event.target.id]: values });
+  };
+
+  useEffect(() => {
+    if (user) {
+      // settitle(user.name.title);
+      setvalue({
+        streetname: user.location.street.name,
+        streetnum: user.location.street.number,
+        city: user.location.city,
+        state: user.location.state,
+        postcode: user.location.postcode,
+        timezone: user.location.timezone.description,
+        timezoneoff: user.location.timezone.offset,
+      });
+    }
+  }, [user]);
+  console.log(value);
+
+  const handleclick = (e) => {
+    e.preventDefault();
+    setedit(false);
+    setsave(true);
+  };
 
   return (
     <div className="container mt-3">
@@ -15,25 +54,18 @@ const Address = () => {
         <div style={{ paddingBlockEnd: "80px" }}>
           <Form layout="inline" className="mt-50 ">
             <Form.Group>
-              <Form.ControlLabel>
-                Street name
-                {/* {
-                  <img
-                    src="https://img.icons8.com/officexs/25/000000/copy.png"
-                    alt="not"
-                  />
-                } */}
-              </Form.ControlLabel>
+              <Form.ControlLabel>Street name</Form.ControlLabel>
               <Form.Control
-                value={currentuser.location.street.name}
+                value={value.streetname}
                 name="streetname"
                 type="text"
                 id="streetname"
-                disabled
+                readOnly={edit}
+                onChange={handlechange}
                 style={{ color: "black", cursor: "text" }}
               />
               <button
-                className="pt-1"
+                className={`pt-1 ${save ? "d-none" : ""}`}
                 onClick={() => {
                   copytext("streetname");
                 }}
@@ -44,15 +76,16 @@ const Address = () => {
             <Form.Group>
               <Form.ControlLabel>StreetNumber</Form.ControlLabel>
               <Form.Control
-                value={currentuser.location.street.number}
+                value={value.streetnum}
                 name="streetnum"
                 id="streetnum"
                 type="number"
-                disabled
+                readOnly={edit}
+                onChange={handlechange}
                 style={{ color: "black", cursor: "text" }}
               />
               <button
-                className="pt-1"
+                className={`pt-1 ${save ? "d-none" : ""}`}
                 onClick={() => {
                   copytext("streetnum");
                 }}
@@ -63,15 +96,16 @@ const Address = () => {
             <Form.Group>
               <Form.ControlLabel>City</Form.ControlLabel>
               <Form.Control
-                value={currentuser.location.city}
+                value={value.city}
                 name="city"
                 type="text"
                 id="city"
-                disabled
+                readOnly={edit}
+                onChange={handlechange}
                 style={{ color: "black", cursor: "text" }}
               />
               <button
-                className="pt-1"
+                className={`pt-1 ${save ? "d-none" : ""}`}
                 onClick={() => {
                   copytext("city");
                 }}
@@ -86,12 +120,13 @@ const Address = () => {
                 name="state"
                 type="text"
                 id="state"
-                disabled
-                value={currentuser.location.state}
+                readOnly={edit}
+                onChange={handlechange}
+                value={value.state}
                 style={{ color: "black", cursor: "text" }}
               />
               <button
-                className="pt-1"
+                className={`pt-1 ${save ? "d-none" : ""}`}
                 onClick={() => {
                   copytext("state");
                 }}
@@ -105,12 +140,13 @@ const Address = () => {
                 name="postcode"
                 type="number"
                 id="postcode"
-                disabled
-                value={currentuser.location.postcode}
+                readOnly={edit}
+                onChange={handlechange}
+                value={value.postcode}
                 style={{ color: "black", cursor: "text" }}
               />
               <button
-                className="pt-1"
+                className={`pt-1 ${save ? "d-none" : ""}`}
                 onClick={() => {
                   copytext("postcode");
                 }}
@@ -124,12 +160,13 @@ const Address = () => {
                 name="timezone"
                 type="text"
                 id="timezone"
-                disabled
-                value={currentuser.location.timezone.description}
+                readOnly={edit}
+                onChange={handlechange}
+                value={value.timezone}
                 style={{ color: "black", cursor: "text" }}
               />
               <button
-                className="pt-1"
+                className={`pt-1 ${save ? "d-none" : ""}`}
                 onClick={() => {
                   copytext("timezone");
                 }}
@@ -143,12 +180,13 @@ const Address = () => {
                 name="timezoneoff"
                 type="text"
                 id="timezoneoff"
-                disabled
-                value={currentuser.location.timezone.offset}
+                readOnly={edit}
+                onChange={handlechange}
+                value={value.timezoneoff}
                 style={{ color: "black", cursor: "text" }}
               />
               <button
-                className="pt-1"
+                className={`pt-1 ${save ? "d-none" : ""}`}
                 onClick={() => {
                   copytext("timezoneoff");
                 }}
@@ -162,8 +200,20 @@ const Address = () => {
                 appearance="primary"
                 style={{ width: "400px", marginTop: "15px" }}
                 color="red"
+                onClick={handleclick}
+                disabled={save}
               >
                 Edit
+              </Button>
+              <Button
+                appearance="primary"
+                color="green"
+                className="mx-3"
+                style={{ width: "400px", marginTop: "15px" }}
+                onClick={handleclick}
+                disabled={!save}
+              >
+                Save
               </Button>
             </div>
           </Form>

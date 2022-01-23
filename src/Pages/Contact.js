@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Form } from "rsuite";
 import { useUser } from "../Context/DataContext";
 import Copy from "../components/Copy";
@@ -7,6 +7,38 @@ import Welcome from "./Welcome";
 
 const Contact = () => {
   const { currentuser, copytext } = useUser();
+
+  const user = currentuser !== "" && currentuser;
+  console.log(user);
+
+  const [edit, setedit] = useState(true);
+  const [save, setsave] = useState(false);
+  const [value, setvalue] = useState({
+    cell: "",
+    emailin: "",
+    phone: "",
+  });
+  const handlechange = (values, event) => {
+    setvalue({ ...value, [event.target.id]: values });
+  };
+
+  useEffect(() => {
+    if (user) {
+      // settitle(user.name.title);
+      setvalue({
+        cell: user.cell,
+        emailin: user.email,
+        phone: user.phone,
+      });
+    }
+  }, [user]);
+  console.log(value);
+
+  const handleclick = (e) => {
+    e.preventDefault();
+    setedit(false);
+    setsave(true);
+  };
 
   return (
     <div className="container mt-3">
@@ -17,17 +49,18 @@ const Contact = () => {
             <Form.Group>
               <Form.ControlLabel>Contact Number</Form.ControlLabel>
               <Form.Control
-                value={currentuser.cell}
-                name="tel"
-                id="tel"
+                value={value.cell}
+                name="cell"
+                id="cell"
                 type="text"
-                disabled
+                readOnly={edit}
+                onChange={handlechange}
                 style={{ color: "black", cursor: "text" }}
               />
               <button
-                className="pt-1"
+                className={`pt-1 ${save ? "d-none" : ""}`}
                 onClick={() => {
-                  copytext("tel");
+                  copytext("cell");
                 }}
               >
                 <Copy />
@@ -36,15 +69,16 @@ const Contact = () => {
             <Form.Group>
               <Form.ControlLabel>E-mail</Form.ControlLabel>
               <Form.Control
-                value={currentuser.email}
+                value={value.emailin}
                 name="emailin"
                 id="emailin"
                 type="email"
-                disabled
+                readOnly={edit}
+                onChange={handlechange}
                 style={{ color: "black", cursor: "text" }}
               />
               <button
-                className="pt-1"
+                className={`pt-1 ${save ? "d-none" : ""}`}
                 onClick={() => {
                   copytext("emailin");
                 }}
@@ -59,12 +93,13 @@ const Contact = () => {
                 type="text"
                 name="phone"
                 id="phone"
-                disabled
-                value={currentuser.phone}
+                readOnly={edit}
+                onChange={handlechange}
+                value={value.phone}
                 style={{ color: "black", cursor: "text" }}
               />
               <button
-                className="pt-1"
+                className={`pt-1 ${save ? "d-none" : ""}`}
                 onClick={() => {
                   copytext("phone");
                 }}
@@ -78,8 +113,20 @@ const Contact = () => {
                 appearance="primary"
                 style={{ width: "400px", marginTop: "15px" }}
                 color="red"
+                onClick={handleclick}
+                disabled={save}
               >
                 Edit
+              </Button>
+              <Button
+                appearance="primary"
+                color="green"
+                className="mx-3"
+                style={{ width: "400px", marginTop: "15px" }}
+                onClick={handleclick}
+                disabled={!save}
+              >
+                Save
               </Button>
             </div>
           </Form>
