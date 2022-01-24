@@ -286,7 +286,6 @@ $indent_150: 150px;
   transform: translateX(-50%);
 }
 #user_value {
-  color: #2c2e31;
   font-size: 38px;
   margin: 5px;
   text-transform: capitalize;
@@ -363,4 +362,23 @@ ul {
 .bttn:hover {
   background-color: rgb(30, 139, 20);
   color: whitesmoke;
+}
+
+.theme-toggle {
+  transition: 0.5s;
+  transform: scale(1);
+}
+.theme-toggle:hover {
+  transform: scale(1.2);
+  // max-height: 7%;
+}
+.centered {
+  // display: flex;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  // margin: 0;
+  // overflow: hidden;
 }

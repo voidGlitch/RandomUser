@@ -9,7 +9,6 @@ const Personal = () => {
   const { currentuser, copytext } = useUser();
 
   const user = currentuser !== "" && currentuser;
-  console.log(user);
 
   const [edit, setedit] = useState(true);
   const [save, setsave] = useState(false);

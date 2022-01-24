@@ -56,8 +56,8 @@ const Cards = () => {
               />
             </div>
             <Values />
-            <div id="user_value" style={{ textTransform: "lowercase" }}>
-              <Data />
+            <div id="user_value">
+              <Data style={{ textTransform: "lowercase" }} />
             </div>
           </div>
           <ul className="values_list horizontal_center" id="values_list">
@@ -87,7 +87,7 @@ const Cards = () => {
               }}
             >
               <img
-                src="https://img.icons8.com/ios/45/000000/birth-date.png"
+                src="https://img.icons8.com/color-glass/48/000000/birth-date.png"
                 alt="not"
               />
             </li>
@@ -107,7 +107,7 @@ const Cards = () => {
               }}
             >
               <img
-                src="https://img.icons8.com/dotty/50/000000/ringing-phone.png"
+                src="https://img.icons8.com/external-flatarticons-blue-flatarticons/48/000000/external-contact-contact-us-flatarticons-blue-flatarticons.png"
                 alt="not"
               />
             </li>
