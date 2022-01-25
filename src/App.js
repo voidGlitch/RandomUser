@@ -10,6 +10,8 @@ import Personal from "./Pages/Personal";
 import UserForm from "./Pages/UserForm";
 import Address from "./Pages/Address";
 import Contact from "./Pages/Contact";
+import Save from "./Pages/Save";
+import Edit from "./Pages/Edit";
 
 function App() {
   const [mode, setmode] = useState("light");
@@ -17,7 +19,7 @@ function App() {
   const togglemode = () => {
     if (mode === "dark") {
       setmode("light");
-      console.log("light");
+
       document.body.style.backgroundColor = "white";
       document.body.style.color = "#575757";
       document.body.style.transition = "1s";
@@ -65,6 +67,10 @@ function App() {
               <Route path="/address" exact element={<Address />} />
 
               <Route path="/contact" exact element={<Contact />} />
+
+              <Route path="/save" exact element={<Save />} />
+
+              <Route path="/edit" exact element={<Edit />} />
             </Routes>
           </Router>
         </div>

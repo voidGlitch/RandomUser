@@ -1,31 +1,41 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Button } from "rsuite";
 import Navs from "../components/Navs";
+import Searchbtn from "../components/Searchbtn";
 import { useUser } from "../Context/DataContext";
 import Cards from "./Cards";
 
 const Welcome = () => {
-  const { getapi, Loading, isActive, currentuser } = useUser();
-
-  const onClicked = async () => {
-    await getapi();
-  };
+  const { Loading, currentuser } = useUser();
 
   return (
     <>
       <div className="mt-3">
-        <Button
-          appearance="primary"
-          color="green"
-          disabled={Loading}
-          onClick={onClicked}
-          style={{
-            width: "600px",
-            maxWidth: "100%",
-          }}
-        >
-          {isActive ? "Get New Accounts" : "Get an account"}
-        </Button>
+        <Searchbtn />
+        <br></br>
+        {currentuser && (
+          <Link to="/save">
+            <Button
+              className="mt-2"
+              appearance="primary"
+              color="violet"
+              style={{
+                width: "600px",
+                maxWidth: "100%",
+                fontFamily: "apple-system",
+              }}
+            >
+              {
+                <img
+                  src="https://img.icons8.com/color/20/000000/test-account.png"
+                  alt="not"
+                />
+              }{" "}
+              Save as it is
+            </Button>
+          </Link>
+        )}
       </div>
       {Loading && (
         <div>
@@ -39,7 +49,7 @@ const Welcome = () => {
       <Cards />
       {currentuser && (
         <div className="mt-100">
-          <h3 style={{ fontSize: "16px" }}>
+          <h3 style={{ fontSize: "18px", fontFamily: "apple-system" }}>
             Hey,my name is {currentuser.name.first} {currentuser.name.last} .I
             am {currentuser.dob.age} year old.I am from{" "}
             {currentuser.location.country} and currently living in{" "}

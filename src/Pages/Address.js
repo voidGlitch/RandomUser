@@ -6,9 +6,9 @@ import Copy from "../components/Copy";
 import Welcome from "./Welcome";
 
 const Address = () => {
-  const { currentuser, copytext } = useUser();
+  const { currentuser, copytext, setisedit, addressedit, setiseditted } =
+    useUser();
   const user = currentuser !== "" && currentuser;
-  console.log(user);
 
   const [edit, setedit] = useState(true);
   const [save, setsave] = useState(false);
@@ -38,13 +38,23 @@ const Address = () => {
         timezoneoff: user.location.timezone.offset,
       });
     }
+
+    // addressedit(value);
   }, [user]);
-  console.log(value);
 
   const handleclick = (e) => {
     e.preventDefault();
     setedit(false);
     setsave(true);
+    setiseditted(true);
+    setisedit(true);
+  };
+  const handleclicksave = (e) => {
+    e.preventDefault();
+    setedit(true);
+    setsave(false);
+    addressedit(value);
+    setisedit(false);
   };
 
   return (
@@ -138,7 +148,7 @@ const Address = () => {
               <Form.ControlLabel>Postcode</Form.ControlLabel>
               <Form.Control
                 name="postcode"
-                type="number"
+                type="text"
                 id="postcode"
                 readOnly={edit}
                 onChange={handlechange}
@@ -210,7 +220,7 @@ const Address = () => {
                 color="green"
                 className="mx-3"
                 style={{ width: "400px", marginTop: "15px" }}
-                onClick={handleclick}
+                onClick={handleclicksave}
                 disabled={!save}
               >
                 Save

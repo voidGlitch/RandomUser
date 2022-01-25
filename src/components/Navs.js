@@ -1,34 +1,95 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Grid, Button } from "rsuite";
 import { useUser } from "../Context/DataContext";
 
-const Navs = ({ mode }) => {
-  const { isActive } = useUser();
+const Navs = () => {
+  const { isActive, currentuser, finallist } = useUser();
+  const user = currentuser !== "" && currentuser;
+
+  const taskDate = (dateMilli) => {
+    var d = (new Date(dateMilli) + "").split(" ");
+    d[2] = d[2] + ",";
+
+    return [d[0], d[1], d[2], d[3]].join(" ");
+  };
+
+  var datemilli = Date.parse(
+    currentuser !== "" ? currentuser.dob.date : "Sun May 11,2014"
+  );
+  const date = taskDate(datemilli);
+
+  const [address, setaddress] = useState({
+    streetname: "",
+    streetnum: "",
+    city: "",
+    state: "",
+    postcode: "",
+    timezone: "",
+    timezoneoff: "",
+  });
+  const [contact, setcontact] = useState({
+    cell: "",
+    emailin: "",
+    phone: "",
+  });
+  const [personal, setpersonal] = useState({
+    title: "",
+    first: "",
+    last: "",
+    dob: "",
+    gender: "",
+    age: "",
+    image: "",
+  });
+  const [email, setemail] = useState({
+    email: "",
+    password: "",
+    userid: "",
+    username: "",
+  });
+  useEffect(() => {
+    if (user) {
+      setaddress({
+        streetname: user.location.street.name,
+        streetnum: user.location.street.number,
+        city: user.location.city,
+        state: user.location.state,
+        postcode: user.location.postcode,
+        timezone: user.location.timezone.description,
+        timezoneoff: user.location.timezone.offset,
+      });
+      setcontact({
+        cell: user.cell,
+        emailin: user.email,
+        phone: user.phone,
+      });
+      setpersonal({
+        title: user.name.title,
+        first: user.name.first,
+        last: user.name.last,
+        dob: date,
+        gender: user.gender,
+        age: user.dob.age,
+        image: user.picture.large,
+      });
+      setemail({
+        email: user.email,
+        password: user.login.password,
+        userid: user.login.uuid,
+        username: user.login.username,
+      });
+    }
+  }, [user, date]);
+
+  const handleclicked = () => {
+    finallist([address, personal, contact, email]);
+  };
 
   return (
     <>
       {isActive && (
         <Grid fluid>
-          <Link to="/save">
-            <Button
-              appearance="primary"
-              color="red"
-              style={{
-                width: "400px",
-                maxWidth: "100%",
-              }}
-            >
-              {
-                <img
-                  src="https://img.icons8.com/fluency/20/000000/email-open.png"
-                  alt="not"
-                />
-              }{" "}
-              SAVE INFO
-            </Button>
-          </Link>
-          <br></br>
           <Link to="/personal" className="mx-2">
             <button colSpan={4} className="bttn mr-3 ">
               {
@@ -37,7 +98,7 @@ const Navs = ({ mode }) => {
                   alt="not"
                 />
               }{" "}
-              Personal Details
+              Edit Personal Details
             </button>
           </Link>
           <Link to="/address">
@@ -48,7 +109,7 @@ const Navs = ({ mode }) => {
                   alt="not"
                 />
               }{" "}
-              Address/Location
+              Edit Address/Location
             </button>
           </Link>
           <Link to="/contact">
@@ -59,7 +120,7 @@ const Navs = ({ mode }) => {
                   alt="not"
                 />
               }{" "}
-              Contact info
+              Edit Contact info
             </button>
           </Link>
 
@@ -71,8 +132,28 @@ const Navs = ({ mode }) => {
                   alt="not"
                 />
               }{" "}
-              Email Info
+              Edit Email Info
             </button>
+          </Link>
+          <br></br>
+          <Link to="/edit">
+            <Button
+              appearance="primary"
+              color="red"
+              style={{
+                width: "400px",
+                maxWidth: "100%",
+              }}
+              onClick={handleclicked}
+            >
+              {
+                <img
+                  src="https://img.icons8.com/fluency/24/000000/save-close.png"
+                  alt="not"
+                />
+              }
+              Done
+            </Button>
           </Link>
         </Grid>
       )}

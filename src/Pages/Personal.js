@@ -6,7 +6,8 @@ import Welcome from "./Welcome";
 import Copy from "../components/Copy";
 
 const Personal = () => {
-  const { currentuser, copytext } = useUser();
+  const { currentuser, copytext, personaledit, setisedit, setiseditted } =
+    useUser();
 
   const user = currentuser !== "" && currentuser;
 
@@ -19,9 +20,8 @@ const Personal = () => {
     dob: "",
     gender: "",
     age: "",
+    image: "",
   });
-
-  // const [title, settitle] = useState("");
 
   const taskDate = (dateMilli) => {
     var d = (new Date(dateMilli) + "").split(" ");
@@ -41,7 +41,6 @@ const Personal = () => {
 
   useEffect(() => {
     if (user) {
-      // settitle(user.name.title);
       setvalue({
         title: user.name.title,
         first: user.name.first,
@@ -49,17 +48,26 @@ const Personal = () => {
         dob: date,
         gender: user.gender,
         age: user.dob.age,
+        image: user.picture.large,
       });
     }
   }, [user, date]);
-  console.log(value);
 
   const handleclick = (e) => {
     e.preventDefault();
     setedit(false);
     setsave(true);
+    setiseditted(true);
+    setisedit(true);
   };
+  const handleclicksave = (e) => {
+    e.preventDefault();
+    setedit(true);
+    setsave(false);
+    personaledit(value);
 
+    setisedit(false);
+  };
   return (
     <div className="container">
       <Welcome />
@@ -74,7 +82,6 @@ const Personal = () => {
                 id="title"
                 type="text"
                 readOnly={edit}
-                // style={{ color: "black", cursor: "text" }}
                 onChange={handlechange}
               />
               <button
@@ -183,6 +190,25 @@ const Personal = () => {
                 <Copy />
               </button>
             </Form.Group>
+            <Form.Group>
+              <Form.ControlLabel>Image Link</Form.ControlLabel>
+              <Form.Control
+                value={value.image}
+                name="image"
+                id="image"
+                type="text"
+                readOnly={edit}
+                onChange={handlechange}
+              />
+              <button
+                className={`pt-1 ${save ? "d-none" : ""}`}
+                onClick={() => {
+                  copytext("image");
+                }}
+              >
+                <Copy />
+              </button>
+            </Form.Group>
 
             <div className="container ">
               <Button
@@ -199,7 +225,7 @@ const Personal = () => {
                 color="green"
                 className="mx-3"
                 style={{ width: "400px", marginTop: "15px" }}
-                onClick={handleclick}
+                onClick={handleclicksave}
                 disabled={!save}
               >
                 Save

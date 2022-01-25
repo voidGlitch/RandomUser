@@ -6,10 +6,10 @@ import Copy from "../components/Copy";
 import Welcome from "./Welcome";
 
 const Contact = () => {
-  const { currentuser, copytext } = useUser();
+  const { currentuser, copytext, setisedit, contactedit, setiseditted } =
+    useUser();
 
   const user = currentuser !== "" && currentuser;
-  console.log(user);
 
   const [edit, setedit] = useState(true);
   const [save, setsave] = useState(false);
@@ -24,7 +24,6 @@ const Contact = () => {
 
   useEffect(() => {
     if (user) {
-      // settitle(user.name.title);
       setvalue({
         cell: user.cell,
         emailin: user.email,
@@ -32,12 +31,20 @@ const Contact = () => {
       });
     }
   }, [user]);
-  console.log(value);
 
   const handleclick = (e) => {
     e.preventDefault();
     setedit(false);
     setsave(true);
+    setiseditted(true);
+    setisedit(true);
+  };
+  const handleclicksave = (e) => {
+    e.preventDefault();
+    setedit(true);
+    setsave(false);
+    contactedit(value);
+    setisedit(false);
   };
 
   return (
@@ -123,7 +130,7 @@ const Contact = () => {
                 color="green"
                 className="mx-3"
                 style={{ width: "400px", marginTop: "15px" }}
-                onClick={handleclick}
+                onClick={handleclicksave}
                 disabled={!save}
               >
                 Save

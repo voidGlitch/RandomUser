@@ -5,9 +5,9 @@ import Welcome from "./Welcome";
 import Copy from "../components/Copy";
 
 const UserForm = () => {
-  const { currentuser, copytext } = useUser();
+  const { currentuser, copytext, setisedit, emailedit, setiseditted } =
+    useUser();
   const user = currentuser !== "" && currentuser;
-  console.log(user);
 
   const [edit, setedit] = useState(true);
   const [save, setsave] = useState(false);
@@ -23,7 +23,6 @@ const UserForm = () => {
 
   useEffect(() => {
     if (user) {
-      // settitle(user.name.title);
       setvalue({
         email: user.email,
         password: user.login.password,
@@ -32,19 +31,21 @@ const UserForm = () => {
       });
     }
   }, [user]);
-  console.log(value);
 
   const handleclick = (e) => {
     e.preventDefault();
     setedit(false);
     setsave(true);
+    setiseditted(true);
+    setisedit(true);
   };
   const handleclicksave = (e) => {
     e.preventDefault();
     setedit(true);
     setsave(false);
+    emailedit(value);
+    setisedit(false);
   };
-
   return (
     <>
       <Welcome />
