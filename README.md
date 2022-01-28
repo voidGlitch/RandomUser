@@ -1,5 +1,5 @@
 # Getting Started with Create React App
-
+This project was deployed on [Random userGen](https://randomusergen.herokuapp.com/)with SSH key and HEROKU CLI
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
